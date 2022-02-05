@@ -12,13 +12,14 @@ import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
   {
     path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
     {path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},
-    {path: 'members/:id', component: MemberDetailComponent},
+    {path: 'members/:username', component: MemberDetailComponent},
     {path: 'lists', component: ListsComponent},
     {path: 'messages', component: MessagesComponent},
     ]
