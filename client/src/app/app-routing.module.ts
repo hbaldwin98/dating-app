@@ -1,3 +1,4 @@
+import { LoggedInGuard } from './guards/logged-in.guard';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
@@ -13,8 +14,8 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'home', component: HomeComponent},
+  {path: '', component: HomeComponent, canActivate: [LoggedInGuard]},
+  {path: 'home', component: HomeComponent, canActivate: [LoggedInGuard]},
   {
     path: '',
     runGuardsAndResolvers: 'always',
