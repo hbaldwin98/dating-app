@@ -1,11 +1,13 @@
+import { AccountService } from 'src/app/_services/account.service';
 import { PaginatedResult } from './../_modules/pagination';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Member } from './../_models/member';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { UserParams } from '../_models/userParams';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,38 @@ import { UserParams } from '../_models/userParams';
 export class MembersService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
+  memberCache = new Map();
+  user: User;
+  userParams: UserParams;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
+      this.user = user;
+      this.userParams = new UserParams(user);
+    });
+  }
+
+  getUserParams() {
+    return this.userParams;
+  }
+
+  setUserParams(params: UserParams) {
+    this.userParams = params;
+  }
+
+  resetUserParams() {
+    this.userParams = new UserParams(this.user);
+    return this.userParams;
+  }
 
   getMembers(userParams: UserParams) {
+    let response = this.memberCache.get(Object.values(userParams).join('-'))
+
+    if (response) {
+      return of(response);
+    }
+
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
     params = params.append('minAge', userParams.minAge.toString());
@@ -25,7 +54,23 @@ export class MembersService {
     params = params.append('gender', userParams.gender);
     params = params.append('orderBy', userParams.orderBy);
 
-    return this.getPaginatedResults<Member[]>(this.baseUrl + 'users', params);
+    return this.getPaginatedResults<Member[]>(this.baseUrl + 'users', params)
+      .pipe(map(response => {
+        this.memberCache.set(Object.values(userParams).join('-'), response);
+        return response;
+      }));
+  }
+
+  getMember(username: string) {
+    const member = [...this.memberCache.values()]
+      .reduce((arr, ele) => arr.concat(ele.result), [])
+      .find((member: Member) => member.username === username);
+
+    if (member) {
+      return of(member);
+    }
+
+    return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
   private getPaginatedResults<T>(url, params) {
@@ -50,12 +95,6 @@ export class MembersService {
     params = params.append('pageSize', pageSize.toString());
 
     return params;
-  }
-
-  getMember(username: string) {
-    const member = this.members.find(x => x.username === username);
-    if (member !== undefined) return of(member);
-    return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
   updateMember(member: Member) {
