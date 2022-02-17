@@ -1,0 +1,14 @@
+[
+  {
+      "id": 2,
+      "senderId": 11,
+      "senderUsername": "bob",
+      "senderPhotoUrl": null,
+      "recipientId": 6,
+      "recipientUsername": "levy",
+      "recipientPhotoUrl": "https://res.cloudinary.com/dylwn4kw8/image/upload/v1644253204/owdl0bftlocaslglbsyk.jpg",
+      "content": "Test message from bob to levy",
+      "dateRead": null,
+      "messageSent": "2022-02-15T13:08:23.6679363"
+  }
+]
