@@ -20,7 +20,6 @@ export class MemberDetailComponent implements OnInit {
   activeTab: TabDirective;
   messages: Message[] = [];
 
-
   constructor(private location: Location, private route: ActivatedRoute, private messageService: MessageService) { }
 
   ngOnInit(): void {

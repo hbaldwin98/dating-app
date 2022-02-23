@@ -10,7 +10,6 @@ import { AccountService } from './_services/account.service';
 export class AppComponent implements OnInit {
   title = 'The Dating App';
   users: any;
-  
 
   constructor(private accountService: AccountService) {}
 
@@ -20,7 +19,7 @@ export class AppComponent implements OnInit {
 
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
+
     this.accountService.setCurrentUser(user);
   }
-
 }
