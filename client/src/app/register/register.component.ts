@@ -25,7 +25,6 @@ export class RegisterComponent implements OnInit {
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
 
-
   initializeForm() {
     this.registerForm = this.fb.group({
       gender:         ['male'],

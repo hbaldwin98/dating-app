@@ -1,10 +1,11 @@
 import { MessageService } from './../../_services/message.service';
 import { Message } from './../../_models/message';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { NgForm } from '@angular/forms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-member-messages',
   templateUrl: './member-messages.component.html',
   styleUrls: ['./member-messages.component.css']
