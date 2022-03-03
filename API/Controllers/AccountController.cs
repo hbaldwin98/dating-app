@@ -50,7 +50,6 @@ namespace API.Controllers
         }
 
         [HttpPost("Login")]
-
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.Users
